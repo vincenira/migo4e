@@ -15,6 +15,13 @@ type list[T any] struct {
 	start *node[T]
 }
 
+func (l *list[T]) equal(data T) {
+	if l.start.Data == data {
+		return true
+	}
+	return false
+}
+
 func (l *list[T]) add(data T) {
 	n := node[T]{
 		Data: data,
@@ -41,7 +48,7 @@ func (l *list[T]) search(data T) {
 	// need to define a comparable function and finish the delete function
 	for l.start != nil {
 
-		if data == l.start.Data {
+		if equal(l.start.Data, data) {
 			fmt.Println(l.start.Data)
 		}
 		l.start = l.start.next
