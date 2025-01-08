@@ -15,13 +15,6 @@ type list[T any] struct {
 	start *node[T]
 }
 
-func (l *list[T]) equal(data T) {
-	if l.start.Data == data {
-		return true
-	}
-	return false
-}
-
 func (l *list[T]) add(data T) {
 	n := node[T]{
 		Data: data,
@@ -44,14 +37,23 @@ func (l *list[T]) add(data T) {
 	l.start = temp
 }
 
-func (l *list[T]) search(data T) {
+func is_found[S ~[]E, E comparable](s S, v E) int {
 	// need to define a comparable function and finish the delete function
-	for l.start != nil {
-
-		if equal(l.start.Data, data) {
-			fmt.Println(l.start.Data)
+	for i := range s {
+		if v == s[i] {
+			return i
 		}
-		l.start = l.start.next
+	}
+	return -1
+}
+
+func (l *list[T]) search(data T) {
+	for l.start != nil {
+		if is_found(l.start.Data, data) {
+			fmt.Println("it was found")
+		} else {
+			fmt.Println("not found")
+		}
 	}
 }
 
