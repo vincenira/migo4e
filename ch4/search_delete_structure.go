@@ -6,17 +6,17 @@ import (
 	"fmt"
 )
 
-type node[T any] struct {
-	Data T
-	next *node[T]
+type node[E comparable] struct {
+	Data E
+	next *node[E]
 }
 
-type list[T any] struct {
-	start *node[T]
+type list[E comparable] struct {
+	start *node[E]
 }
 
-func (l *list[T]) add(data T) {
-	n := node[T]{
+func (l *list[E]) add(data E) {
+	n := node[E]{
 		Data: data,
 		next: nil,
 	}
@@ -37,30 +37,19 @@ func (l *list[T]) add(data T) {
 	l.start = temp
 }
 
-func is_found[S ~[]E, E comparable](s S, v E) int {
-	// need to define a comparable function and finish the delete function
-	for i := range s {
-		if v == s[i] {
-			return i
-		}
-	}
-	return -1
-}
-
-func (l *list[T]) search(data T) {
+func (l *list[E]) search(data E) bool {
 	for l.start != nil {
-		if is_found(l.start.Data, data) {
-			fmt.Println("it was found")
-		} else {
-			fmt.Println("not found")
+		if l.start.Data == data {
+			return true
 		}
-	}
-}
-
-func (l *list[T]) PrintMe() {
-	for l.start != nil {
-		fmt.Println("*", l.start.Data)
 		l.start = l.start.next
+	}
+	return false
+}
+
+func (l *list[E]) PrintMe() {
+	for node := l.start; node != nil; node = node.next {
+		fmt.Println("*", node.Data)
 	}
 }
 
@@ -71,16 +60,9 @@ func main() {
 	myList.add(9)
 	myList.add(3)
 	myList.add(9)
-
-	// Print all elements
-	cur := myList.start
-	for {
-		fmt.Println("*", cur)
-		if cur == nil {
-			break
-		}
-		cur = cur.next
-	}
-
+	value := myList.search(12)
 	myList.PrintMe()
+	valueF := myList.search(9)
+	fmt.Println(value)
+	fmt.Println(valueF)
 }
