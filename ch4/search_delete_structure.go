@@ -6,17 +6,17 @@ import (
 	"fmt"
 )
 
-type node[E comparable] struct {
-	Data E
-	next *node[E]
+type node[T comparable] struct {
+	Data T
+	next *node[T]
 }
 
-type list[E comparable] struct {
-	start *node[E]
+type list[T comparable] struct {
+	start *node[T]
 }
 
-func (l *list[E]) add(data E) {
-	n := node[E]{
+func (l *list[T]) add(data T) {
+	n := node[T]{
 		Data: data,
 		next: nil,
 	}
@@ -37,17 +37,16 @@ func (l *list[E]) add(data E) {
 	l.start = temp
 }
 
-func (l *list[E]) search(data E) bool {
-	for l.start != nil {
-		if l.start.Data == data {
+func (l *list[T]) search(data T) bool {
+	for node := l.start; node != nil; node = node.next {
+		if node.Data == data {
 			return true
 		}
-		l.start = l.start.next
 	}
 	return false
 }
 
-func (l *list[E]) PrintMe() {
+func (l *list[T]) PrintMe() {
 	for node := l.start; node != nil; node = node.next {
 		fmt.Println("*", node.Data)
 	}
@@ -61,8 +60,8 @@ func main() {
 	myList.add(3)
 	myList.add(9)
 	value := myList.search(12)
+	valueF := myList.search(8)
 	myList.PrintMe()
-	valueF := myList.search(9)
 	fmt.Println(value)
 	fmt.Println(valueF)
 }
