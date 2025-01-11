@@ -37,6 +37,14 @@ func (l *list[T]) add(data T) {
 	l.start = temp
 }
 
+func (l *list[T]) delete(data T) {
+	current := l.start
+	previous := nil
+	found := false
+	for !found && current != nil {
+	}
+}
+
 func (l *list[T]) search(data T) bool {
 	for node := l.start; node != nil; node = node.next {
 		if node.Data == data {
