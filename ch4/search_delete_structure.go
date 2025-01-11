@@ -42,6 +42,19 @@ func (l *list[T]) delete(data T) {
 	previous := nil
 	found := false
 	for !found && current != nil {
+		if current.Data == data {
+			found = true
+		} else {
+			previous = current
+			current = current.next
+		}
+	}
+	if found {
+		if l.start == nil {
+			l.start = l.start.next
+		} else {
+			previous.next = current.next
+		}
 	}
 }
 
