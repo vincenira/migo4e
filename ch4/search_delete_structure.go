@@ -39,7 +39,7 @@ func (l *list[T]) add(data T) {
 
 func (l *list[T]) delete(data T) {
 	current := l.start
-	previous := nil
+	previous := l.start
 	found := false
 	for !found && current != nil {
 		if current.Data == data {
@@ -80,8 +80,10 @@ func main() {
 	myList.add(9)
 	myList.add(3)
 	myList.add(9)
+	myList.PrintMe()
 	value := myList.search(12)
 	valueF := myList.search(8)
+	myList.delete(9)
 	myList.PrintMe()
 	fmt.Println(value)
 	fmt.Println(valueF)
