@@ -16,9 +16,10 @@ type node[T comparable] struct {
 
 type list[T comparable] struct {
 	start *node[T]
+	end   *node[T]
 }
 
-func (l *list[T]) add(data T) {
+func (l *list[T]) Fadd(data T) {
 	n := node[T]{
 		Data: data,
 		next: nil,
@@ -32,12 +33,14 @@ func (l *list[T]) add(data T) {
 
 	if l.start.next == nil {
 		l.start.next = &n
+		l.start.prev = l.start
 		return
 	}
 
 	temp := l.start
 	l.start = l.start.next
-	l.add(data)
+
+	l.Fadd(data)
 	l.start = temp
 }
 
@@ -80,17 +83,11 @@ func (l *list[T]) PrintMe() {
 func main() {
 	var myList list[int]
 	fmt.Println(myList)
-	myList.add(12)
-	myList.add(9)
-	myList.add(3)
-	myList.add(9)
-	myList.add(1)
-	myList.add(17)
+	myList.Fadd(12)
+	myList.Fadd(9)
+	myList.Fadd(3)
+	myList.Fadd(9)
+	myList.Fadd(1)
+	myList.Fadd(17)
 	myList.PrintMe()
-	value := myList.search(12)
-	valueF := myList.search(8)
-	myList.delete(9)
-	myList.PrintMe()
-	fmt.Println(value)
-	fmt.Println(valueF)
 }
