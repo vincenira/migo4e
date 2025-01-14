@@ -19,7 +19,7 @@ type list[T comparable] struct {
 	end   *node[T]
 }
 
-func (l *list[T]) Fadd(data T) {
+func (l *list[T]) addAtEnd(data T) {
 	n := node[T]{
 		Data: data,
 		next: nil,
@@ -28,19 +28,21 @@ func (l *list[T]) Fadd(data T) {
 
 	if l.start == nil {
 		l.start = &n
+		l.end = &n
 		return
 	}
 
 	if l.start.next == nil {
+		temp := l.start
 		l.start.next = &n
-		l.start.prev = l.start
+		l.start.next.prev = temp
+		l.end = l.start.next
 		return
 	}
 
 	temp := l.start
 	l.start = l.start.next
-
-	l.Fadd(data)
+	l.addAtEnd(data)
 	l.start = temp
 }
 
@@ -76,18 +78,28 @@ func (l *list[T]) search(data T) bool {
 
 func (l *list[T]) PrintMe() {
 	for node := l.start; node != nil; node = node.next {
-		fmt.Println("*", node.Data)
+		fmt.Printf("* %d next: %p prev: %p\n", node.Data, node.next, node.prev)
+	}
+}
+
+func (l *list[T]) BPrintMe() {
+	for node := l.end; node != nil; node = node.prev {
+		fmt.Println("* ", node.Data, node.prev)
 	}
 }
 
 func main() {
 	var myList list[int]
 	fmt.Println(myList)
-	myList.Fadd(12)
-	myList.Fadd(9)
-	myList.Fadd(3)
-	myList.Fadd(9)
-	myList.Fadd(1)
-	myList.Fadd(17)
+	myList.addAtEnd(12)
+	myList.addAtEnd(9)
+	myList.addAtEnd(3)
+	myList.addAtEnd(9)
+	myList.addAtEnd(1)
+	myList.addAtEnd(17)
+	myList.addAtEnd(20)
+	myList.addAtEnd(21)
 	myList.PrintMe()
+	fmt.Println("==========")
+	myList.BPrintMe()
 }
