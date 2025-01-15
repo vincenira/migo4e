@@ -111,7 +111,7 @@ func (l *list[T]) PrintMe() {
 
 func (l *list[T]) BPrintMe() {
 	for node := l.end; node != nil; node = node.prev {
-		fmt.Println("* ", node.Data, node.prev)
+		fmt.Printf("* %d next: %p prev: %p\n", node.Data, node.next, node.prev)
 	}
 }
 
