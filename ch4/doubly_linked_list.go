@@ -46,6 +46,33 @@ func (l *list[T]) addAtEnd(data T) {
 	l.start = temp
 }
 
+func (l *list[T]) addAtBegin(data T) {
+	n := node[T]{
+		Data: data,
+		next: nil,
+		prev: nil,
+	}
+
+	if l.start == nil {
+		l.start = &n
+		l.end = &n
+		return
+	}
+
+	if l.end.prev == nil {
+		temp := l.end
+		l.end.prev = &n
+		l.end.prev.next = temp
+		l.start = l.end.prev
+
+		return
+	}
+	temp := l.end
+	l.end = l.end.prev
+	l.addAtBegin(data)
+	l.end = temp
+}
+
 func (l *list[T]) delete(data T) {
 	current := l.start
 	previous := l.start
@@ -99,6 +126,9 @@ func main() {
 	myList.addAtEnd(17)
 	myList.addAtEnd(20)
 	myList.addAtEnd(21)
+	myList.addAtBegin(40)
+	myList.addAtBegin(14)
+	myList.addAtBegin(23)
 	myList.PrintMe()
 	fmt.Println("==========")
 	myList.BPrintMe()
