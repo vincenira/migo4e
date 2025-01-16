@@ -115,6 +115,18 @@ func (l *list[T]) BPrintMe() {
 	}
 }
 
+func (l *list[T]) removeAtEnd() {
+	temp := l.end.prev
+	temp.next = nil
+	l.end = temp
+}
+
+func (l *list[T]) removeAtBegin() {
+	temp := l.start.next
+	temp.prev = nil
+	l.start = temp
+}
+
 func main() {
 	var myList list[int]
 	fmt.Println(myList)
@@ -129,7 +141,11 @@ func main() {
 	myList.addAtBegin(40)
 	myList.addAtBegin(14)
 	myList.addAtBegin(23)
+	myList.delete(9)
+	myList.removeAtEnd()
+	myList.removeAtBegin()
 	myList.PrintMe()
 	fmt.Println("==========")
 	myList.BPrintMe()
+	fmt.Println("9 was found ", myList.search(9))
 }
