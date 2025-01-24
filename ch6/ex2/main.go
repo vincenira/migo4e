@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"./sqlite06mariadb"
+	"ex2/sqlite06mariadb"
 )
 
 var (
@@ -50,7 +50,7 @@ func main() {
 	}
 
 	SEED := time.Now().Unix()
-	rand.Seed(SEED)
+	rand.New(rand.NewSource(SEED))
 	random_username := strings.ToLower(getString(5))
 
 	t := sqlite06mariadb.Userdata{
