@@ -226,7 +226,7 @@ func SearchinByUsername(username string) ([]Userdata, error) {
 	defer db.Close()
 
 	query := `SELECT ID, Username, Name, Surname, Description
-		FROM Users, Userdata WHERE Users.ID = Userdata.UserID and Users.Username = %s`
+		FROM Users, Userdata WHERE Users.ID = Userdata.UserID and Users.Username = ?`
 	rows, err := db.Query(query, username)
 	if err != nil {
 		return Data, err
