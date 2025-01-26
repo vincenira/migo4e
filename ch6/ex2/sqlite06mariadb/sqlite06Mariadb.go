@@ -31,7 +31,7 @@ type Userdata struct {
 func openConnectionMariaDB() (*sql.DB, error) {
 	user := os.Getenv("mariadbUser")
 	pass := os.Getenv("mariadbPass")
-	connectionString := user + ":" + pass + "@tcp(localhost:3306)/socialmedia"
+	connectionString := user + ":" + pass + "@tcp(localhost:3306)/social_media"
 	db, err := sql.Open("mysql", connectionString)
 	if err != nil {
 		return nil, err
