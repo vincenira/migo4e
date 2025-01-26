@@ -66,6 +66,19 @@ func main() {
 		fmt.Println("There was an error adding user", t.Username)
 	}
 
+	searchedData, err := sqlite06mariadb.SearchinByUsername(random_username)
+	if err != nil {
+		fmt.Println("SearchingByUsername(): ", err)
+		return
+	}
+
+	if len(searchedData) != 0 {
+		fmt.Println("Printing searched data from username: ", random_username)
+		for _, v := range searchedData {
+			fmt.Println(v)
+		}
+	}
+
 	err = sqlite06mariadb.DeleteUser(id)
 	if err != nil {
 		fmt.Println(err)
