@@ -212,3 +212,39 @@ func UpdateUser(d Userdata) error {
 
 	return nil
 }
+
+/*
+The sqlite06 package does not support searching by username.
+Can you implement that?
+*/
+func SearchinByUsername(username string) ([]Userdata, error) {
+	Data := []Userdata{}
+	db, err := openConnectionMariaDB()
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
+	query := `SELECT ID, Username, Name, Surname, Description
+		FROM Users, Userdata WHERE Users.ID = Userdata.UserID and Users.Username = %s`
+	rows, err := db.Query(query, username)
+	if err != nil {
+		return Data, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var id int
+		var username string
+		var name string
+		var surname string
+		var desc string
+		err = rows.Scan(&id, &username, &name, &surname, &desc)
+		temp := Userdata{ID: id, Username: username, Name: name, Surname: surname, Description: desc}
+		Data = append(Data, temp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return Data, nil
+}
