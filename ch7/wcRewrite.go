@@ -20,17 +20,17 @@ printResult takes two arguments
 and then total only if the number of characters of the second arguments is zero
 otherwise it prints both two arguments
 */
-func countPerLine(s string) (total int) {
+func countPerLinePerFile(s []string) (total int) {
+	total = len(s)
+	return
+}
+
+func countPerWordPerFile(s []string) (total int) {
 	total = 0
 	return
 }
 
-func countPerWord(s string) (total int) {
-	total = 0
-	return
-}
-
-func countPerCharacter(s string) (total int) {
+func countPerCharacterPerFile(s []string) (total int) {
 	total = 0
 	return
 }
@@ -76,13 +76,16 @@ func main() {
 	lengthArgs := len(args)
 	if lengthArgs > 1 {
 		for index := range lengthArgs - 1 {
-			fmt.Println(args[index+1])
+			s, _ := readfile(args[index+1])
+			fmt.Println(s)
 		}
 	} else {
 		scanner := bufio.NewScanner(os.Stdin)
+		var readlines []string
 		for scanner.Scan() {
-			fmt.Println(scanner.Text()) // Println will add back the final '\n'
+			readlines = append(readlines, scanner.Text())
 		}
+		fmt.Println(len(readlines))
 		if err := scanner.Err(); err != nil {
 			fmt.Fprintln(os.Stderr, "reading standard input:", err)
 		}
