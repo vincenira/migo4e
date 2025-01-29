@@ -74,14 +74,14 @@ func readfile(fileName string) ([]string, error) {
 func main() {
 	args := os.Args
 	lengthArgs := len(args)
+	var readlines []string
 	if lengthArgs > 1 {
 		for index := range lengthArgs - 1 {
-			s, _ := readfile(args[index+1])
-			fmt.Println(s)
+			readlines, _ := readfile(args[index+1])
+			fmt.Println(readlines)
 		}
 	} else {
 		scanner := bufio.NewScanner(os.Stdin)
-		var readlines []string
 		for scanner.Scan() {
 			readlines = append(readlines, scanner.Text())
 		}
