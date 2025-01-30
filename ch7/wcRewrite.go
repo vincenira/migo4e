@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"regexp"
 )
 
 /*
@@ -20,13 +21,15 @@ printResult takes two arguments
 and then total only if the number of characters of the second arguments is zero
 otherwise it prints both two arguments
 */
-func countPerLinePerFile(s []string) (total int) {
-	total = len(s)
-	return
-}
-
 func countPerWordPerFile(s []string) (total int) {
 	total = 0
+	re := regexp.MustCompile("[^\\s]+")
+	for _, line := range s {
+		if len(line) != 0 {
+			words := re.FindAllString(line, -1)
+			total += len(words)
+		}
+	}
 	return
 }
 
@@ -39,7 +42,7 @@ func printResult(total int, fileName string) {
 	if len(fileName) == 0 {
 		fmt.Println(total)
 	} else {
-		fmt.Printf("%d %s", total, fileName)
+		fmt.Printf("%d %s\n", total, fileName)
 	}
 }
 
@@ -74,21 +77,40 @@ func readfile(fileName string) ([]string, error) {
 func main() {
 	args := os.Args
 	lengthArgs := len(args)
-	var readlines []string
+	var readLines []string
 	if lengthArgs > 1 {
+		var totalLines int
 		for index := range lengthArgs - 1 {
-			readlines, _ := readfile(args[index+1])
-			fmt.Println(readlines)
+			readlinesPerfile, _ := readfile(args[index+1])
+			totalLines += len(readlinesPerfile)
+			fmt.Printf("Total number of lines: %d %s\n", len(readlinesPerfile), args[index+1])
+		}
+		if lengthArgs > 2 {
+			fmt.Println("Total number of lines:", totalLines)
+		}
+
+		var totalWords int
+		for index := range lengthArgs - 1 {
+			readlinesPerfile, _ := readfile(args[index+1])
+			totalwordsPerfile := countPerWordPerFile(readlinesPerfile)
+			fmt.Printf("Total number of Words: %d %s\n", totalwordsPerfile, args[index+1])
+			totalWords += totalwordsPerfile
+		}
+		if lengthArgs > 2 {
+			fmt.Println("Total number of Words:", totalWords)
 		}
 	} else {
 		scanner := bufio.NewScanner(os.Stdin)
 		for scanner.Scan() {
-			readlines = append(readlines, scanner.Text())
+			readLines = append(readLines, scanner.Text())
 		}
-		fmt.Println(len(readlines))
 		if err := scanner.Err(); err != nil {
 			fmt.Fprintln(os.Stderr, "reading standard input:", err)
 		}
+
+		fmt.Printf("Total number of lines: %d\n", len(readLines))
+		totalWords := countPerWordPerFile(readLines)
+		fmt.Printf("Total number of Words: %d\n", totalWords)
 
 	}
 }
