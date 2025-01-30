@@ -35,6 +35,9 @@ func countPerWordPerFile(s []string) (total int) {
 
 func countPerCharacterPerFile(s []string) (total int) {
 	total = 0
+	for _, line := range s {
+		total += len(string(line))
+	}
 	return
 }
 
@@ -111,6 +114,8 @@ func main() {
 		fmt.Printf("Total number of lines: %d\n", len(readLines))
 		totalWords := countPerWordPerFile(readLines)
 		fmt.Printf("Total number of Words: %d\n", totalWords)
+		totalChars := countPerCharacterPerFile(readLines)
+		fmt.Printf("Total number of Characters: %d\n", totalChars)
 
 	}
 }
