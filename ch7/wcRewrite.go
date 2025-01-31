@@ -41,14 +41,6 @@ func countPerCharacterPerFile(s []string) (total int) {
 	return
 }
 
-func printResult(total int, fileName string) {
-	if len(fileName) == 0 {
-		fmt.Println(total)
-	} else {
-		fmt.Printf("%d %s\n", total, fileName)
-	}
-}
-
 func readfile(fileName string) ([]string, error) {
 	var linesReaded []string
 	f, err := os.Open(fileName)
