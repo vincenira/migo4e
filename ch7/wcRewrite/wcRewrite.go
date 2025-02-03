@@ -73,8 +73,6 @@ func readfile(fileName string) ([]string, error) {
 }
 
 func main() {
-	args := os.Args
-	lengthArgs := len(args)
 	var readLines []string
 	pflag.BoolP("lines", "l", true, "--lines, -l to count lines")
 	pflag.BoolP("chars", "c", true, "--chars, -c to count characters")
@@ -83,42 +81,43 @@ func main() {
 	viper.BindPFlags(pflag.CommandLine)
 	linesActivated := viper.GetBool("lines")
 	fmt.Println("viper is ", linesActivated)
-
+	args := pflag.Args()
+	lengthArgs := len(args)
+	fmt.Println("length Args: ", lengthArgs)
 	if lengthArgs > 1 {
 		var totalLines int
-		for index := range lengthArgs - 1 {
-			readlinesPerfile, _ := readfile(args[index+1])
+		for index := range lengthArgs {
+			readlinesPerfile, _ := readfile(args[index])
 			totalLines += len(readlinesPerfile)
-			fmt.Printf("Total number of lines: %d %s\n", len(readlinesPerfile), args[index+1])
+			fmt.Printf("Total number of lines: %d %s\n", len(readlinesPerfile), args[index])
 		}
-		if lengthArgs > 2 {
+		if lengthArgs > 1 {
 			fmt.Println("Total number of lines:", totalLines)
 		}
 
 		var totalWords int
-		for index := range lengthArgs - 1 {
-			readlinesPerfile, _ := readfile(args[index+1])
+		for index := range lengthArgs {
+			readlinesPerfile, _ := readfile(args[index])
 			totalwordsPerfile := countPerWordPerFile(readlinesPerfile)
-			fmt.Printf("Total number of Words: %d %s\n", totalwordsPerfile, args[index+1])
+			fmt.Printf("Total number of Words: %d %s\n", totalwordsPerfile, args[index])
 			totalWords += totalwordsPerfile
 		}
-		if lengthArgs > 2 {
+		if lengthArgs > 1 {
 			fmt.Println("Total number of Words:", totalWords)
 		}
 	} else {
-		scanner := bufio.NewScanner(os.Stdin)
-		for scanner.Scan() {
-			readLines = append(readLines, scanner.Text())
-		}
-		if err := scanner.Err(); err != nil {
-			fmt.Fprintln(os.Stderr, "reading standard input:", err)
-		}
+		//	scanner := bufio.NewScanner(os.Stdin)
+		//	for scanner.Scan() {
+		//		readLines = append(readLines, scanner.Text())
+		//	}
+		//	if err := scanner.Err(); err != nil {
+		//		fmt.Fprintln(os.Stderr, "reading standard input:", err)
+		//	}
 
-		fmt.Printf("Total number of lines: %d\n", len(readLines))
-		totalWords := countPerWordPerFile(readLines)
-		fmt.Printf("Total number of Words: %d\n", totalWords)
-		totalChars := countPerCharacterPerFile(readLines)
-		fmt.Printf("Total number of Characters: %d\n", totalChars)
-
+		//	fmt.Printf("Total number of lines: %d\n", len(readLines))
+		//	totalWords := countPerWordPerFile(readLines)
+		//	fmt.Printf("Total number of Words: %d\n", totalWords)
+		//	totalChars := countPerCharacterPerFile(readLines)
+		//	fmt.Printf("Total number of Characters: %d\n", totalChars)
 	}
 }
