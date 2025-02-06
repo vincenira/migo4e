@@ -3,7 +3,7 @@ Copyright © 2025 vincenira <vincenira@gmail.com>
 */
 package main
 
-import "wcRewrite/cmd"
+import "wcCobra/cmd"
 
 func main() {
 	cmd.Execute()
