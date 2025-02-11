@@ -36,20 +36,20 @@ to quickly create a Cobra application.`,
 			var totalWords int
 			var totalChars int
 			for index := range lengthArgs {
-				readlinesPerfile, _ := wcRewrite.Readfile(args[index])
+				readlinesPerfile, _ := wcBufChan.Readfile(args[index])
 				linePerFile := len(readlinesPerfile)
 				if linesActivated {
 					totalLines += linePerFile
 					fmt.Printf("%d  ", linePerFile)
 				}
 				if wordsActivated {
-					totalwordsPerfile := wcRewrite.CountPerWordPerFile(readlinesPerfile)
+					totalwordsPerfile := wcBufChan.CountPerWordPerFile(readlinesPerfile)
 					totalWords += totalwordsPerfile
 					fmt.Printf("%d ", totalwordsPerfile)
 				}
 
 				if charsActivated {
-					totalCharsPerfile := wcRewrite.CountPerCharacterPerFile(readlinesPerfile)
+					totalCharsPerfile := wcBufChan.CountPerCharacterPerFile(readlinesPerfile)
 					totalChars += totalCharsPerfile
 					fmt.Printf("%d ", totalCharsPerfile)
 				}
@@ -71,11 +71,11 @@ to quickly create a Cobra application.`,
 				fmt.Printf("%d  ", len(readLines))
 			}
 			if wordsActivated {
-				totalWords := wcRewrite.CountPerWordPerFile(readLines)
+				totalWords := wcBufChan.CountPerWordPerFile(readLines)
 				fmt.Printf("%d ", totalWords)
 			}
 			if charsActivated {
-				totalChars := wcRewrite.CountPerCharacterPerFile(readLines)
+				totalChars := wcBufChan.CountPerCharacterPerFile(readLines)
 				fmt.Printf("%d ", totalChars)
 			}
 			fmt.Printf("\n")
