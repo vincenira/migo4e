@@ -13,12 +13,11 @@ printResult takes two arguments
 and then total only if the number of characters of the second arguments is zero
 otherwise it prints both two arguments
 */
-func CountPerWordPerFile(sCh chan []string, iCh chan int) {
+func CountPerWordPerFile(sCh []string, iCh chan int) {
 	total := 0
 	// Receiving data from the channel
-	s := <-sCh
 	re := regexp.MustCompile(`[^\s]+`)
-	for _, line := range s {
+	for _, line := range sCh {
 		if len(line) != 0 {
 			words := re.FindAllString(line, -1)
 			total += len(words)

@@ -43,15 +43,17 @@ to quickly create a Cobra application.`,
 					fmt.Printf("%d  ", linePerFile)
 				}
 				if wordsActivated {
-					totalwordsPerfile := wcBufChan.CountPerWordPerFile(readlinesPerfile)
+					resultTotalChan := make(chan int)
+					go wcBufChan.CountPerWordPerFile(readlinesPerfile, resultTotalChan)
+					totalwordsPerfile := <-resultTotalChan
 					totalWords += totalwordsPerfile
 					fmt.Printf("%d ", totalwordsPerfile)
 				}
 
 				if charsActivated {
-					totalCharsPerfile := wcBufChan.CountPerCharacterPerFile(readlinesPerfile)
-					totalChars += totalCharsPerfile
-					fmt.Printf("%d ", totalCharsPerfile)
+					// totalCharsPerfile := wcBufChan.CountPerCharacterPerFile(readlinesPerfile)
+					// totalChars += totalCharsPerfile
+					// fmt.Printf("%d ", totalCharsPerfile)
 				}
 				fmt.Printf("%s\n", args[index])
 			}
@@ -71,12 +73,12 @@ to quickly create a Cobra application.`,
 				fmt.Printf("%d  ", len(readLines))
 			}
 			if wordsActivated {
-				totalWords := wcBufChan.CountPerWordPerFile(readLines)
-				fmt.Printf("%d ", totalWords)
+				// totalWords := wcBufChan.CountPerWordPerFile(readLines)
+				// fmt.Printf("%d ", totalWords)
 			}
 			if charsActivated {
-				totalChars := wcBufChan.CountPerCharacterPerFile(readLines)
-				fmt.Printf("%d ", totalChars)
+				// totalChars := wcBufChan.CountPerCharacterPerFile(readLines)
+				// fmt.Printf("%d ", totalChars)
 			}
 			fmt.Printf("\n")
 		}
@@ -101,8 +103,7 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.Flags().BoolP("lines", "l", false, "Counts the number of lines")
+	rootCmd.Flags().BoolP("words", "w", false, "Counts the number of words")
+	rootCmd.Flags().BoolP("chars", "c", false, "Counts the number of characters")
 }
