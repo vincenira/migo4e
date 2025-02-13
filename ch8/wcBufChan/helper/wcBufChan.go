@@ -27,11 +27,10 @@ func CountPerWordPerFile(sCh []string, iCh chan int) {
 	iCh <- total
 }
 
-func CountPerCharacterPerFile(sCh chan []string, iCh chan int) {
+func CountPerCharacterPerFile(sCh []string, iCh chan int) {
 	total := 0
 	// Receiving data from the channel
-	s := <-sCh
-	for _, line := range s {
+	for _, line := range sCh {
 		total += len(string(line))
 	}
 	iCh <- total
