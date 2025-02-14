@@ -43,7 +43,7 @@ to quickly create a Cobra application.`,
 					fmt.Printf("%d  ", linePerFile)
 				}
 				if wordsActivated {
-					resultTotalChan := make(chan int)
+					resultTotalChan := make(chan int, 5)
 					go wcBufChan.CountPerWordPerFile(readlinesPerfile, resultTotalChan)
 					totalwordsPerfile := <-resultTotalChan
 					totalWords += totalwordsPerfile
@@ -51,7 +51,7 @@ to quickly create a Cobra application.`,
 				}
 
 				if charsActivated {
-					resultTotalCharsChan := make(chan int)
+					resultTotalCharsChan := make(chan int, 5)
 					go wcBufChan.CountPerCharacterPerFile(readlinesPerfile, resultTotalCharsChan)
 					totalCharsPerfile := <-resultTotalCharsChan
 					totalChars += totalCharsPerfile
@@ -75,13 +75,13 @@ to quickly create a Cobra application.`,
 				fmt.Printf("%d  ", len(readLines))
 			}
 			if wordsActivated {
-				resultTotalWordsChan := make(chan int)
+				resultTotalWordsChan := make(chan int, 5)
 				go wcBufChan.CountPerWordPerFile(readLines, resultTotalWordsChan)
 				totalWords := <-resultTotalWordsChan
 				fmt.Printf("%d ", totalWords)
 			}
 			if charsActivated {
-				resultTotalCharsChan := make(chan int)
+				resultTotalCharsChan := make(chan int, 5)
 				go wcBufChan.CountPerCharacterPerFile(readLines, resultTotalCharsChan)
 				totalChars := <-resultTotalCharsChan
 				fmt.Printf("%d ", totalChars)
