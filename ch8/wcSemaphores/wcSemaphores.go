@@ -24,7 +24,7 @@ var (
 
 // Maximum number of goroutines
 var (
-	Workers = 2
+	Workers = 4
 	sem     = semaphore.NewWeighted(int64(Workers))
 )
 
@@ -35,8 +35,6 @@ func readFile(path string) {
 	}
 	defer f.Close()
 	r := bufio.NewReader(f)
-
-	defer sem.Release(1)
 
 	for {
 		line, err := r.ReadString('\n')
@@ -103,9 +101,9 @@ func main() {
 		return
 	}
 
+	ctx := context.TODO()
 	for _, file := range args[1:] {
 		readFile(file)
-		ctx := context.TODO()
 		_ = sem.Acquire(ctx, 1)
 		go lineByLine()
 		_ = sem.Acquire(ctx, 1)
