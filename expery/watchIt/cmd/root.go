@@ -4,9 +4,10 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
+	"log"
 	"os"
 
+	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/cobra"
 )
 
@@ -21,8 +22,11 @@ var rootCmd = &cobra.Command{
 	Short: "Specify a directory to watch",
 	Long:  `Specify a directory to watch, or It will use your default HOME directory`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(Directory)
-		fmt.Println(WatchedWord)
+		watcher, err := fsnotify.NewWatcher()
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer watcher.Close()
 	},
 }
 
