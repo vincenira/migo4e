@@ -6,6 +6,7 @@ package cmd
 import (
 	"log"
 	"os"
+	"strings"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/cobra"
@@ -22,11 +23,35 @@ var rootCmd = &cobra.Command{
 	Short: "Specify a directory to watch",
 	Long:  `Specify a directory to watch, or It will use your default HOME directory`,
 	Run: func(cmd *cobra.Command, args []string) {
-		watcherDog, err := fsnotify.NewWatcher()
+		watchDog, err := fsnotify.NewWatcher()
 		if err != nil {
 			log.Fatal(err)
 		}
-		defer watcherDog.Close()
+		defer watchDog.Close()
+		done := make(chan bool)
+		go func() {
+			for {
+				select {
+				case event, ok := <-watchDog.Events:
+					if !ok {
+						return
+					}
+					if strings.Contains(strings.ToLower(WatchedWord), strings.ToLower(event.Name)) && event.Op&fsnotify.Create == fsnotify.Create || fsnotify.Write == fsnotify.Write || fsnotify.Remove == fsnotify.Remove || fsnotify.Rename == fsnotify.Rename {
+						log.Printf("%s event was triggered on file: %s", event, event.Name)
+					}
+				case errWatchDog, ok := <-watchDog.Errors:
+					if !ok {
+						return
+					}
+					log.Printf("error: %v", errWatchDog)
+				}
+			}
+		}()
+		err = watchDog.Add(Directory)
+		if err != nil {
+			log.Fatal(err)
+		}
+		<-done // Wait for watcher to be closed.
 	},
 }
 
