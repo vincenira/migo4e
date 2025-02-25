@@ -22,11 +22,11 @@ var rootCmd = &cobra.Command{
 	Short: "Specify a directory to watch",
 	Long:  `Specify a directory to watch, or It will use your default HOME directory`,
 	Run: func(cmd *cobra.Command, args []string) {
-		watcher, err := fsnotify.NewWatcher()
+		watcherDog, err := fsnotify.NewWatcher()
 		if err != nil {
 			log.Fatal(err)
 		}
-		defer watcher.Close()
+		defer watcherDog.Close()
 	},
 }
 
