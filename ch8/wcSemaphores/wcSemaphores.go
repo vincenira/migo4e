@@ -11,6 +11,7 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"sync"
 
 	"golang.org/x/sync/semaphore"
 )
@@ -20,6 +21,7 @@ var (
 	totalLines int
 	totalWords int
 	totalChars int
+	wg         sync.WaitGroup
 )
 
 // Maximum number of goroutines
@@ -52,8 +54,10 @@ func readFile(path string) {
 	}
 }
 
-func wordByWord() {
+func wordByWord(ctx context.Context, wg *sync.WaitGroup) {
+	defer wg.Done()
 	defer sem.Release(1)
+	_ = sem.Acquire(ctx, 1)
 	total := 0
 	re := regexp.MustCompile("[^\\s]+")
 	for _, line := range readString {
@@ -65,13 +69,17 @@ func wordByWord() {
 	totalWords = total
 }
 
-func lineByLine() {
+func lineByLine(ctx context.Context, wg *sync.WaitGroup) {
+	defer wg.Done()
 	defer sem.Release(1)
+	_ = sem.Acquire(ctx, 1)
 	totalLines = len(readString)
 }
 
-func charByChar() {
+func charByChar(ctx context.Context, wg *sync.WaitGroup) {
+	defer wg.Done()
 	defer sem.Release(1)
+	_ = sem.Acquire(ctx, 1)
 	total := 0
 	totalChars = 0
 	for _, line := range readString {
@@ -80,8 +88,10 @@ func charByChar() {
 	totalChars = total
 }
 
-func printTotalResult() {
+func printTotalResult(ctx context.Context, wg *sync.WaitGroup) {
+	defer wg.Done()
 	defer sem.Release(1)
+	_ = sem.Acquire(ctx, 1)
 	if totalLines != 0 {
 		fmt.Printf("%d  ", totalLines)
 	}
@@ -101,16 +111,14 @@ func main() {
 		return
 	}
 
-	ctx := context.TODO()
+	ctx := context.Background()
 	for _, file := range args[1:] {
 		readFile(file)
-		_ = sem.Acquire(ctx, 1)
-		go lineByLine()
-		_ = sem.Acquire(ctx, 1)
-		go wordByWord()
-		_ = sem.Acquire(ctx, 1)
-		go charByChar()
-		_ = sem.Acquire(ctx, 1)
-		go printTotalResult()
+		wg.Add(4)
+		go lineByLine(ctx, &wg)
+		go wordByWord(ctx, &wg)
+		go charByChar(ctx, &wg)
+		go printTotalResult(ctx, &wg)
 	}
+	wg.Wait()
 }
