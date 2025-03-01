@@ -114,11 +114,13 @@ func main() {
 	ctx := context.Background()
 	for _, file := range args[1:] {
 		readFile(file)
-		wg.Add(4)
+		wg.Add(3)
 		go lineByLine(ctx, &wg)
 		go wordByWord(ctx, &wg)
 		go charByChar(ctx, &wg)
+		wg.Wait()
+		wg.Add(1)
 		go printTotalResult(ctx, &wg)
+		wg.Wait()
 	}
-	wg.Wait()
 }
