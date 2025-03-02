@@ -8,7 +8,8 @@ The fmt.Println is a side effect (printing to stdout), and the string we send in
 */
 
 func helloK() string {
-	return "kashikuro" // This is our domain.
+	var1 := "kashikuro"
+	return var1
 }
 
 func main() {
