@@ -67,6 +67,7 @@ func wordByWord(ctx context.Context, wg *sync.WaitGroup) {
 		}
 	}
 	totalWords = total
+	fmt.Printf(" %d", total)
 }
 
 func lineByLine(ctx context.Context, wg *sync.WaitGroup) {
@@ -74,6 +75,7 @@ func lineByLine(ctx context.Context, wg *sync.WaitGroup) {
 	defer sem.Release(1)
 	_ = sem.Acquire(ctx, 1)
 	totalLines = len(readString)
+	fmt.Printf("%d  ", totalLines)
 }
 
 func charByChar(ctx context.Context, wg *sync.WaitGroup) {
@@ -86,6 +88,7 @@ func charByChar(ctx context.Context, wg *sync.WaitGroup) {
 		total += len(string(line))
 	}
 	totalChars = total
+	fmt.Printf("%d ", total)
 }
 
 func printTotalResult(ctx context.Context, wg *sync.WaitGroup) {
@@ -119,8 +122,9 @@ func main() {
 		go wordByWord(ctx, &wg)
 		go charByChar(ctx, &wg)
 		wg.Wait()
-		wg.Add(1)
-		go printTotalResult(ctx, &wg)
-		wg.Wait()
+		fmt.Println("")
 	}
+	wg.Add(1)
+	go printTotalResult(ctx, &wg)
+	wg.Wait()
 }
