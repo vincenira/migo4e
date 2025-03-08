@@ -16,7 +16,6 @@ import (
 
 var (
 	readString []string
-	mutexRead  sync.RWMutex
 	wg         sync.WaitGroup
 	totalLines int
 	totalWords int
@@ -30,9 +29,6 @@ func readFile(path string) {
 	}
 	defer f.Close()
 	r := bufio.NewReader(f)
-
-	mutexRead.Lock()
-	defer mutexRead.Unlock()
 
 	for {
 		// ReadString() returns two values: the string that was read and an error variable.
@@ -51,13 +47,11 @@ func readFile(path string) {
 	}
 }
 
-func wordByWord() {
+func wordByWord(tword chan int) {
 	defer wg.Done()
-	defer mutexRead.RUnlock()
 
 	total := 0
 	re := regexp.MustCompile("[^\\s]+")
-	mutexRead.RLock()
 	for _, line := range readString {
 		if len(line) != 0 {
 			words := re.FindAllString(line, -1)
@@ -67,19 +61,15 @@ func wordByWord() {
 	totalWords = total
 }
 
-func lineByLine() {
+func lineByLine(tline chan int) {
 	defer wg.Done()
-	defer mutexRead.RUnlock()
-	mutexRead.RLock()
 	totalLines = len(readString)
 }
 
-func charByChar() {
+func charByChar(tchar chan int) {
 	defer wg.Done()
-	defer mutexRead.RUnlock()
 	total := 0
 	totalChars = 0
-	mutexRead.RLock()
 	for _, line := range readString {
 		total += len(string(line))
 	}
@@ -88,8 +78,6 @@ func charByChar() {
 
 func printTotalResult() {
 	defer wg.Done()
-	defer mutexRead.RUnlock()
-	mutexRead.RLock()
 	if totalLines != 0 {
 		fmt.Printf("%d  ", totalLines)
 	}
