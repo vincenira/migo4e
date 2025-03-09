@@ -14,6 +14,9 @@ import (
 	"sync"
 )
 
+/*
+To do: adding the logic for channel for reading characters
+*/
 var (
 	readString []string
 	wg         sync.WaitGroup
