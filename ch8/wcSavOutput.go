@@ -103,9 +103,12 @@ func main() {
 	for _, file := range args[1:] {
 		readFile(file)
 		wg.Add(3)
-		go lineByLine()
-		go wordByWord()
-		go charByChar()
+		resultTotalLine := make(chan int, 5)
+		resultTotalChar := make(chan int, 5)
+		resultTotalWord := make(chan int, 5)
+		go lineByLine(resultTotalLine)
+		go wordByWord(resultTotalWord)
+		go charByChar(resultTotalChar)
 		wg.Wait()
 		wg.Add(1) // Add another goroutine to print the total result after all reading goroutines have finished.
 		go printTotalResult()
