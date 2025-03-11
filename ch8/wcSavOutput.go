@@ -61,12 +61,13 @@ func wordByWord(tword chan int) {
 			total += len(words)
 		}
 	}
-	totalWords = total
+	tword <- total
 }
 
 func lineByLine(tline chan int) {
 	defer wg.Done()
 	totalLines = len(readString)
+	tline <- totalLines
 }
 
 func charByChar(tchar chan int) {
@@ -76,7 +77,7 @@ func charByChar(tchar chan int) {
 	for _, line := range readString {
 		total += len(string(line))
 	}
-	totalChars = total
+	tchar <- total
 }
 
 func printTotalResult() {
