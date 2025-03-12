@@ -80,7 +80,7 @@ func charByChar(tchar chan int) {
 	tchar <- total
 }
 
-func printTotalResult() {
+func printToFile(filename, tline chan int, tword chan int, tchar chan int) {
 	defer wg.Done()
 	if totalLines != 0 {
 		fmt.Printf("%d  ", totalLines)
