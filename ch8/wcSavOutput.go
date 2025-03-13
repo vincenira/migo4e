@@ -18,14 +18,15 @@ import (
 To do: adding the logic for channel for reading characters
 */
 var (
-	readString []string
 	wg         sync.WaitGroup
 	totalLines int
 	totalWords int
 	totalChars int
 )
 
-func readFile(path string) {
+func readFile(path string, storeString chan []string) {
+	defer wg.Done()
+	var readString []string
 	f, err := os.Open(path)
 	if err != nil {
 		fmt.Println(err)
@@ -48,12 +49,14 @@ func readFile(path string) {
 		}
 		readString = append(readString, line)
 	}
+	storeString <- readString
 }
 
-func wordByWord(tword chan int) {
+func wordByWord(tword chan int, readStringChan chan []string) {
 	defer wg.Done()
 
 	total := 0
+	readString := <-readStringChan
 	re := regexp.MustCompile("[^\\s]+")
 	for _, line := range readString {
 		if len(line) != 0 {
@@ -64,24 +67,30 @@ func wordByWord(tword chan int) {
 	tword <- total
 }
 
-func lineByLine(tline chan int) {
+func lineByLine(tline chan int, readStringChan chan []string) {
 	defer wg.Done()
-	totalLines = len(readString)
-	tline <- totalLines
+	readString := <-readStringChan
+	totalL := len(readString)
+	tline <- totalL
 }
 
-func charByChar(tchar chan int) {
+func charByChar(tchar chan int, readStringChan chan []string) {
 	defer wg.Done()
 	total := 0
 	totalChars = 0
+	readString := <-readStringChan
 	for _, line := range readString {
 		total += len(string(line))
 	}
 	tchar <- total
 }
 
-func printToFile(filename, tline chan int, tword chan int, tchar chan int) {
+func printTotalResult(tline chan int, tword chan int, tchar chan int) {
 	defer wg.Done()
+	totalWords = <-tword
+	totalChars = <-tchar
+	totalLines = <-tline
+
 	if totalLines != 0 {
 		fmt.Printf("%d  ", totalLines)
 	}
@@ -94,6 +103,10 @@ func printToFile(filename, tline chan int, tword chan int, tchar chan int) {
 	fmt.Printf("total\n")
 }
 
+func printToFile() {
+	fmt.Printf("felow")
+}
+
 func main() {
 	args := os.Args
 	if len(args) == 1 {
@@ -102,17 +115,20 @@ func main() {
 	}
 
 	for _, file := range args[1:] {
-		readFile(file)
+		stringChan := make(chan []string, 1000)
+		wg.Add(1)
+		go readFile(file, stringChan)
+		wg.Wait()
 		wg.Add(3)
 		resultTotalLine := make(chan int, 5)
 		resultTotalChar := make(chan int, 5)
 		resultTotalWord := make(chan int, 5)
-		go lineByLine(resultTotalLine)
-		go wordByWord(resultTotalWord)
-		go charByChar(resultTotalChar)
+		go lineByLine(resultTotalLine, stringChan)
+		go wordByWord(resultTotalWord, stringChan)
+		go charByChar(resultTotalChar, stringChan)
 		wg.Wait()
 		wg.Add(1) // Add another goroutine to print the total result after all reading goroutines have finished.
-		go printTotalResult()
+		go printTotalResult(resultTotalLine, resultTotalWord, resultTotalChar)
 		wg.Wait()
 	}
 }
