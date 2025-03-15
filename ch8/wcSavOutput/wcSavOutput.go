@@ -103,8 +103,12 @@ func printTotalResult(tline chan int, tword chan int, tchar chan int) {
 	fmt.Printf("total\n")
 }
 
-func printToFile() {
-	fmt.Printf("felow")
+func printToFile(tline chan int, tword chan int, tchar chan int) {
+	defer wg.Done()
+	totalLine := <-tline
+	totalWord := <-tword
+	totalChar := <-tchar
+	fmt.Fprintf("%d %d %d total\n", totalLine, totalWord, totalChar)
 }
 
 func main() {
