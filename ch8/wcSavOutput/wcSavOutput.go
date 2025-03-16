@@ -108,7 +108,13 @@ func printToFile(tline chan int, tword chan int, tchar chan int) {
 	totalLine := <-tline
 	totalWord := <-tword
 	totalChar := <-tchar
-	fmt.Fprintf("%d %d %d total\n", totalLine, totalWord, totalChar)
+	f, err := os.Create("/tmp/output.txt")
+	if err != nil {
+		fmt.Println("error occur")
+		f.Close()
+		return
+	}
+	fmt.Fprintf(f, "%d %d %d total\n", totalLine, totalWord, totalChar)
 }
 
 func main() {
