@@ -103,12 +103,24 @@ func printTotalResult(tline chan int, tword chan int, tchar chan int) {
 	fmt.Printf("total\n")
 }
 
+func createFile(name string) {
+	f, err := os.Create("/tmp/output.txt")
+	if err != nil {
+		fmt.Println("error occur in the creation of the file")
+		f.Close()
+		return
+	}
+
+	fmt.Println("File successfully created")
+	f.Close()
+}
+
 func printToFile(tline chan int, tword chan int, tchar chan int) {
 	defer wg.Done()
 	totalLine := <-tline
 	totalWord := <-tword
 	totalChar := <-tchar
-	f, err := os.Create("/tmp/output.txt")
+	f, err := os.OpenFile("/tmp/output.txt", os.O_APPEND|os.O_WRONLY, 0o644)
 	if err != nil {
 		fmt.Println("error occur")
 		f.Close()
