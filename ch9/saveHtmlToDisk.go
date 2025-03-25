@@ -3,6 +3,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -85,6 +86,7 @@ func main() {
 	*/
 	length := 0
 	var buffer [1024]byte
+	response, _ := io.ReadAll(httpData.Body)
 	r := httpData.Body
 	for {
 		n, err := r.Read(buffer[0:])
@@ -102,12 +104,13 @@ func main() {
 		f.Close()
 		return
 	}
-	f, err = os.OpenFile("/tmp/s", os.O_APPEND|os.O_WRONLY, 0o644)
+	f, err = os.OpenFile("/tmp/saveHtml.html", os.O_APPEND|os.O_WRONLY, 0o644)
 	if err != nil {
 		fmt.Println("error occur")
 		f.Close()
 		return
 	}
-	fmt.Fprintf(f, "%s")
+	// fmt.Fprintf(f, "%s", response)
+	fmt.Println(response)
 	f.Close()
 }
