@@ -86,8 +86,18 @@ func main() {
 	*/
 	length := 0
 	var buffer [1024]byte
-	response, _ := io.ReadAll(httpData.Body)
+	outreader := httpData.Body
 	r := httpData.Body
+	fileName := "/tmp/saveHtml.html"
+	f, err := os.Create(fileName)
+	if err != nil {
+		fmt.Println("Error occurred while creating the file")
+		f.Close()
+		return
+	}
+	defer f.Close()
+	io.Copy(f, outreader)
+
 	for {
 		n, err := r.Read(buffer[0:])
 		if err != nil {
@@ -97,20 +107,4 @@ func main() {
 		length = length + n
 	}
 	fmt.Println("Calculated response data length:", length)
-	fileName := "/tmp/saveHtml.html"
-	f, err := os.Create(fileName)
-	if err != nil {
-		fmt.Println("Error occurred while creating the file")
-		f.Close()
-		return
-	}
-	f, err = os.OpenFile("/tmp/saveHtml.html", os.O_APPEND|os.O_WRONLY, 0o644)
-	if err != nil {
-		fmt.Println("error occur")
-		f.Close()
-		return
-	}
-	// fmt.Fprintf(f, "%s", response)
-	fmt.Println(response)
-	f.Close()
 }
