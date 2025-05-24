@@ -53,7 +53,8 @@ func sendKafkaMessage(producer sarama.SyncProducer, users []models.User, ctx *gi
 	if err != nil {
 		return err
 	}
-
+	// initializes a notification struct that encapsulates information about the sender, the recipient,
+	// and the actual message.
 	notification := models.Notification{
 		From:    fromUser,
 		To:      toUser,
@@ -65,11 +66,14 @@ func sendKafkaMessage(producer sarama.SyncProducer, users []models.User, ctx *gi
 		return fmt.Errorf("failed to marshal notification: %w", err)
 	}
 
+	// Constrcuts a ProducerMessage for the notifications topic, setting the recipient's ID as the key
+	// and the message content, which is the serialized form of the Notification as the value
 	msg := &sarama.ProducerMessage{
 		Topic: KafkaTopic,
 		Key:   sarama.StringEncoder(strconv.Itoa(toUser.ID)),
 		Value: sarama.StringEncoder(notificationJson),
 	}
+	// Sends the constructed message to the "notifications" topic
 	_, _, err = producer.SendMessage(msg)
 	return err
 }
@@ -102,8 +106,13 @@ func sendMessageHandler(producer sarama.SyncProducer, users []models.User) gin.H
 }
 
 func setupProducer() (sarama.SyncProducer, error) {
+	// Initializes a new default configuration for kafka.
+	// think of it as setting up the parameters befroe connecting to the broker
 	config := sarama.NewConfig()
+	// Ensures that the producer receives an acknowledgment once the message is successfully
+	// stored in the "notifications"
 	config.Producer.Return.Successes = true
+	// Initializes a synchronos kafka producer that connects to the kafka broker running at localhost:9092
 	producer, err := sarama.NewSyncProducer([]string{KafkaServerAddress}, config)
 	if err != nil {
 		return nil, fmt.Errorf("failed to setup producer: %w", err)
