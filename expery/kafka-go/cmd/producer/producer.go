@@ -136,7 +136,7 @@ func main() {
 	router := gin.Default()
 	router.POST("/send", sendMessageHandler(producer, users))
 
-	fmt.Printf("Kafka Producer started at the http://localhost%s\n", ProducerPort)
+	fmt.Printf("Kafka Producer 📨 started at the http://localhost%s\n", ProducerPort)
 
 	if err := router.Run(ProducerPort); err != nil {
 		log.Printf("failed to run the server: %v", err)
