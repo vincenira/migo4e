@@ -55,7 +55,7 @@ func (ns *NotificationStore) Get(userID string) []models.Notification {
 
 // KAFKA RELATED FUNCTIONS
 
-type consumer struct {
+type Consumer struct {
 	store *NotificationStore
 }
 
