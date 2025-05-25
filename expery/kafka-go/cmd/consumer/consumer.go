@@ -59,9 +59,15 @@ type Consumer struct {
 	store *NotificationStore
 }
 
+// Setup() and Cleanup() methods are required to satisfy the sarama.ConsumerGroupHandler interface
+// while they will NOT be used in this tutorial, they can serve potential rols for initialization and
+// cleanup during message consumption but act as placeholders here.
 func (*Consumer) Setup(sarama.ConsumerGroupSession) error   { return nil }
 func (*Consumer) Cleanup(sarama.ConsumerGroupSession) error { return nil }
 
+// in the ConsumeClaim()method, The consumer listens for new messages on the topic.
+// For each message, it fetches the userID (the key of the message), un-marshals the message into
+// a Notification struct, and adds the notification to the NotificationStore
 func (consumer *Consumer) ConsumeClaim(sess sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for msg := range claim.Messages() {
 		userID := string(msg.Key)
@@ -78,8 +84,11 @@ func (consumer *Consumer) ConsumeClaim(sess sarama.ConsumerGroupSession, claim s
 }
 
 func initializeconsumerGroup() (sarama.ConsumerGroup, error) {
+	// Initializes a new default configuration for Kafka
 	config := sarama.NewConfig()
 
+	// Creates a new Kafka consumer group that connects to the broker running on localhost:9092
+	// the group name is "notifications-group"
 	consumerGroup, err := sarama.NewConsumerGroup([]string{KafkaServerAddress}, ConsumerGroup, config)
 	if err != nil {
 		return nil, fmt.Errorf("failed to initialize consumer group: %w", err)
@@ -87,6 +96,7 @@ func initializeconsumerGroup() (sarama.ConsumerGroup, error) {
 	return consumerGroup, nil
 }
 
+// Set up the kafka consumer group, listtens for incoming messages,and processes them using the Consumer struct methods
 func setupConsumerGroup(ctx context.Context, store *NotificationStore) {
 	consumerGroup, err := initializeconsumerGroup()
 	if err != nil {
@@ -109,6 +119,7 @@ func setupConsumerGroup(ctx context.Context, store *NotificationStore) {
 	}
 }
 
+// Fetches the notifications for the provide userId from the NotificationSore.
 func handleNotifications(ctx *gin.Context, store *NotificationStore) {
 	userID, err := getUserIDFromRequest(ctx)
 	if err != nil {
@@ -129,16 +140,22 @@ func handleNotifications(ctx *gin.Context, store *NotificationStore) {
 }
 
 func main() {
+	// Creates an instance of NotificationStore to hold the notifications
 	store := &NotificationStore{
 		data: make(UserNotifications),
 	}
 
+	// Sets up a cancellable context that can be used to stop the consumer group
 	ctx, cancel := context.WithCancel(context.Background())
+
+	// Starts the consumer group in a separate Goroutine, allowing it to operate concurrently
+	// without blocking the main thread
 	go setupConsumerGroup(ctx, store)
 	defer cancel()
 
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
+	// Define a GET endpoint /notifications/:userID that will fetch the notifications for a specific user via the handleNotifications() function when accessed
 	router.GET("/notifications/:userID", func(ctx *gin.Context) {
 		handleNotifications(ctx, store)
 	})
