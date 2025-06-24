@@ -1,0 +1,16 @@
+{
+  "dockerFile": "Dockerfile",
+  "mounts": [
+    {
+      "source": "${localEnv:HOME}",
+      "target": "/root",
+      "type": "bind"
+    }
+  ],
+  "appPort": [
+    "8000:8000"
+  ]
+  //    "extensions": [
+  //       "ms-vscode.go"
+  //    ]
+}
