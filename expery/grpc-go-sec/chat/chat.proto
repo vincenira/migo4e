@@ -7,6 +7,17 @@ message Message {
   string body = 1;
 }
 
+message RequestMessage{
+  string requestString = 1;
+}
+
+message ResponseMessage {
+  string responseString = 1;
+}
 service ChatService {
   rpc SayHello(Message) returns (Message) {}
+}
+
+service BroadcastService{
+  rpc Greet(RequestMessage) returns (ResponseMessage){}
 }
