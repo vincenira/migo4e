@@ -119,3 +119,105 @@ var ChatService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "chat.proto",
 }
+
+const (
+	BroadcastService_Greet_FullMethodName = "/chat.BroadcastService/Greet"
+)
+
+// BroadcastServiceClient is the client API for BroadcastService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type BroadcastServiceClient interface {
+	Greet(ctx context.Context, in *RequestMessage, opts ...grpc.CallOption) (*ResponseMessage, error)
+}
+
+type broadcastServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewBroadcastServiceClient(cc grpc.ClientConnInterface) BroadcastServiceClient {
+	return &broadcastServiceClient{cc}
+}
+
+func (c *broadcastServiceClient) Greet(ctx context.Context, in *RequestMessage, opts ...grpc.CallOption) (*ResponseMessage, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ResponseMessage)
+	err := c.cc.Invoke(ctx, BroadcastService_Greet_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// BroadcastServiceServer is the server API for BroadcastService service.
+// All implementations must embed UnimplementedBroadcastServiceServer
+// for forward compatibility.
+type BroadcastServiceServer interface {
+	Greet(context.Context, *RequestMessage) (*ResponseMessage, error)
+	mustEmbedUnimplementedBroadcastServiceServer()
+}
+
+// UnimplementedBroadcastServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedBroadcastServiceServer struct{}
+
+func (UnimplementedBroadcastServiceServer) Greet(context.Context, *RequestMessage) (*ResponseMessage, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Greet not implemented")
+}
+func (UnimplementedBroadcastServiceServer) mustEmbedUnimplementedBroadcastServiceServer() {}
+func (UnimplementedBroadcastServiceServer) testEmbeddedByValue()                          {}
+
+// UnsafeBroadcastServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to BroadcastServiceServer will
+// result in compilation errors.
+type UnsafeBroadcastServiceServer interface {
+	mustEmbedUnimplementedBroadcastServiceServer()
+}
+
+func RegisterBroadcastServiceServer(s grpc.ServiceRegistrar, srv BroadcastServiceServer) {
+	// If the following call pancis, it indicates UnimplementedBroadcastServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&BroadcastService_ServiceDesc, srv)
+}
+
+func _BroadcastService_Greet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestMessage)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BroadcastServiceServer).Greet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BroadcastService_Greet_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BroadcastServiceServer).Greet(ctx, req.(*RequestMessage))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// BroadcastService_ServiceDesc is the grpc.ServiceDesc for BroadcastService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var BroadcastService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "chat.BroadcastService",
+	HandlerType: (*BroadcastServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Greet",
+			Handler:    _BroadcastService_Greet_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "chat.proto",
+}
