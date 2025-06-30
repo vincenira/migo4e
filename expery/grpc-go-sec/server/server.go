@@ -25,4 +25,9 @@ func main() {
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %s", err)
 	}
+
+	chat.RegisterBroadcastServiceServer(grpcServer, &s)
+	if err := grpcServer.Serve(lis); err != nil {
+		log.Fatalf("failed to serve broadcast %s", err)
+	}
 }

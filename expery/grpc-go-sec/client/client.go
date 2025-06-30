@@ -25,4 +25,11 @@ func main() {
 		log.Fatalf("Error when calling SayHello: %s", err)
 	}
 	log.Printf("Response from server: %s", response.Body)
+
+	responseM, errM := c.Greet(context.Background(), &chat.RequestMessage{RequestString: "airbender!"})
+
+	if errM != nil {
+		log.Fatalf("Error when calling Greet: %s", errM)
+	}
+	log.Printf("%s", responseM.ResponseString)
 }
