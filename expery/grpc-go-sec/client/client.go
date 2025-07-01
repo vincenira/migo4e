@@ -33,4 +33,9 @@ func main() {
 		log.Fatalf("Error when calling Greet: %s", errM)
 	}
 	log.Printf("%s", responseM.ResponseString)
+	responseM, errM = bs.SayPeace(context.Background(), &chat.RequestMessage{RequestString: "peace"})
+	if errM != nil {
+		log.Fatalf("Error when calling SayPeace: %s", errM)
+	}
+	log.Printf("%s", responseM.ResponseString)
 }

@@ -166,9 +166,10 @@ const file_chat_proto_rawDesc = "" +
 	"\x0fResponseMessage\x12&\n" +
 	"\x0eresponseString\x18\x01 \x01(\tR\x0eresponseString29\n" +
 	"\vChatService\x12*\n" +
-	"\bSayHello\x12\r.chat.Message\x1a\r.chat.Message\"\x002J\n" +
+	"\bSayHello\x12\r.chat.Message\x1a\r.chat.Message\"\x002\x85\x01\n" +
 	"\x10BroadcastService\x126\n" +
-	"\x05Greet\x12\x14.chat.RequestMessage\x1a\x15.chat.ResponseMessage\"\x00B\tZ\a../chatb\x06proto3"
+	"\x05Greet\x12\x14.chat.RequestMessage\x1a\x15.chat.ResponseMessage\"\x00\x129\n" +
+	"\bSayPeace\x12\x14.chat.RequestMessage\x1a\x15.chat.ResponseMessage\"\x00B\tZ\a../chatb\x06proto3"
 
 var (
 	file_chat_proto_rawDescOnce sync.Once
@@ -191,8 +192,10 @@ var file_chat_proto_goTypes = []any{
 var file_chat_proto_depIdxs = []int32{
 	0, // 0: chat.ChatService.SayHello:input_type -> chat.Message
 	1, // 1: chat.BroadcastService.Greet:input_type -> chat.RequestMessage
-	0, // 2: chat.ChatService.SayHello:output_type -> chat.Message
+	1, // 2: chat.BroadcastService.SayPeace:input_type -> chat.RequestMessage
+	0, // 3: chat.ChatService.SayHello:output_type -> chat.Message
 	2, // 4: chat.BroadcastService.Greet:output_type -> chat.ResponseMessage
+	2, // 5: chat.BroadcastService.SayPeace:output_type -> chat.ResponseMessage
 	3, // [3:6] is the sub-list for method output_type
 	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

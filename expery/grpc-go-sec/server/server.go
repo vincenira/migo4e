@@ -18,9 +18,11 @@ func main() {
 	}
 
 	s := chat.Server{}
+	bs := chat.BServer{}
 	grpcServer := grpc.NewServer()
 
 	chat.RegisterChatServiceServer(grpcServer, &s)
+	chat.RegisterBroadcastServiceServer(grpcServer, &bs)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %s", err)
