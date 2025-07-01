@@ -19,6 +19,7 @@ func main() {
 	defer conn.Close()
 
 	c := chat.NewChatServiceClient(conn)
+	bs := chat.NewBroadcastServiceClient(conn)
 
 	response, err := c.SayHello(context.Background(), &chat.Message{Body: "Hello From Client!"})
 	if err != nil {
@@ -26,7 +27,7 @@ func main() {
 	}
 	log.Printf("Response from server: %s", response.Body)
 
-	responseM, errM := c.Greet(context.Background(), &chat.RequestMessage{RequestString: "airbender!"})
+	responseM, errM := bs.Greet(context.Background(), &chat.RequestMessage{RequestString: "airbender!"})
 
 	if errM != nil {
 		log.Fatalf("Error when calling Greet: %s", errM)

@@ -121,7 +121,7 @@ var ChatService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	BroadcastService_Greet_FullMethodName = "/chat.BroadcastService/Greet"
+	BroadcastService_Greet_FullMethodName    = "/chat.BroadcastService/Greet"
 )
 
 // BroadcastServiceClient is the client API for BroadcastService service.

@@ -16,7 +16,8 @@ func (s *Server) SayHello(ctx context.Context, in *Message) (*Message, error) {
 	return &Message{Body: "Hello From the Server!"}, nil
 }
 
-func (s *Server) Greet(ctx context.Context, request *RequestMessage) (*ResponseMessage, error) {
+
+func (bs *BServer) Greet(ctx context.Context, request *RequestMessage) (*ResponseMessage, error) {
 	log.Printf("Received Request from client: %s", request.RequestString)
 	responseInfo := fmt.Sprintf("Hello from the server to %s", request.RequestString)
 	return &ResponseMessage{ResponseString: responseInfo}, nil

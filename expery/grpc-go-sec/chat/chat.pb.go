@@ -192,9 +192,9 @@ var file_chat_proto_depIdxs = []int32{
 	0, // 0: chat.ChatService.SayHello:input_type -> chat.Message
 	1, // 1: chat.BroadcastService.Greet:input_type -> chat.RequestMessage
 	0, // 2: chat.ChatService.SayHello:output_type -> chat.Message
-	2, // 3: chat.BroadcastService.Greet:output_type -> chat.ResponseMessage
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	2, // 4: chat.BroadcastService.Greet:output_type -> chat.ResponseMessage
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
